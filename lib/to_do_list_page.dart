@@ -13,13 +13,25 @@ class _ToDoListPageState extends State<ToDoListPage> {
   @override
   void initState() {
     isShowForm = false;
-    listToDoModels = [ToDoModel(title: "Title 1", description: "Do sthing title 1")];
+    listToDoModels = [];
     super.initState();
   }
 
   void setShowForm(bool isShowForm) {
     setState(() {
       this.isShowForm = isShowForm;
+    });
+  }
+
+  void addWork(ToDoModel toDoModel){
+    setState(() {
+      listToDoModels.add(toDoModel);
+    });
+  }
+
+  void deleteWork(int position){
+    setState(() {
+      listToDoModels.removeAt(position);
     });
   }
 
@@ -33,12 +45,12 @@ class _ToDoListPageState extends State<ToDoListPage> {
         padding: EdgeInsets.all(8.0),
         child: Column(
           children: [
-            shouldShowForm(isShowForm, setShowForm),
+            shouldShowForm(isShowForm, setShowForm , addWork),
             Expanded(
               child: ListView.builder(
                 itemCount: listToDoModels.length,
                 itemBuilder: (context , position){
-                  return itemTodo(listToDoModels[position]);
+                  return itemTodo(listToDoModels[position] , position ,deleteWork);
                 },
               ),
             )
@@ -49,7 +61,9 @@ class _ToDoListPageState extends State<ToDoListPage> {
     );
   }
 
-  Widget shouldShowForm(bool isShowForm, Function setShowForm) {
+  Widget shouldShowForm(bool isShowForm, Function setShowForm, Function addWork) {
+    final TextEditingController textTitle = TextEditingController();
+    final TextEditingController textDescription = TextEditingController();
     if (isShowForm) {
       return Container(
         padding: EdgeInsets.all(20),
@@ -61,6 +75,7 @@ class _ToDoListPageState extends State<ToDoListPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
+              controller: textTitle,
               decoration: InputDecoration(
                   hintText: "Title",
                   border: OutlineInputBorder(
@@ -70,6 +85,7 @@ class _ToDoListPageState extends State<ToDoListPage> {
               height: 10,
             ),
             TextField(
+              controller: textDescription,
               decoration: InputDecoration(
                   hintText: "Description",
                   border: OutlineInputBorder(
@@ -84,7 +100,16 @@ class _ToDoListPageState extends State<ToDoListPage> {
                 Expanded(
                   flex: 50,
                   child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        String title = textTitle.text.toString();
+                        String description = textDescription.text.toString();
+
+                        if(title.isEmpty || description.isEmpty){
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Ban chua truyen du thong tin")));
+                          return;
+                        }
+                        addWork(ToDoModel(title: title , description: description));
+                      },
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all(Colors.green),
@@ -127,9 +152,6 @@ class _ToDoListPageState extends State<ToDoListPage> {
                 ),
               ],
             ),
-            // SizedBox(
-            //   height: 5,
-            // ),
           ],
         ),
       );
@@ -157,14 +179,16 @@ class _ToDoListPageState extends State<ToDoListPage> {
     );
   }
 
-  Widget itemTodo(ToDoModel toDoModel) {
+  Widget itemTodo(ToDoModel toDoModel , int position , Function deleteWork) {
     return Container(
       child: ListTile(
         title: Text(toDoModel.title),
         subtitle: Text(toDoModel.description),
         trailing: IconButton(
           icon: Icon(Icons.delete , color: Colors.red),
-          onPressed: () {},
+          onPressed: (){
+            deleteWork(position);
+          },
         ),
       ),
     );
