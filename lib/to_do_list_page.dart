@@ -181,14 +181,96 @@ class _ToDoListPageState extends State<ToDoListPage> {
 
   Widget itemTodo(ToDoModel toDoModel , int position , Function deleteWork) {
     return Container(
-      child: ListTile(
-        title: Text(toDoModel.title),
-        subtitle: Text(toDoModel.description),
-        trailing: IconButton(
-          icon: Icon(Icons.delete , color: Colors.red),
-          onPressed: (){
-            deleteWork(position);
-          },
+      child: InkWell(
+        onTap: (){
+          showDialog(
+              context: context,
+              builder: (context){
+                final TextEditingController textTitle = TextEditingController();
+                final TextEditingController textDescription = TextEditingController();
+                return Dialog(
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextField(
+                          controller: textTitle,
+                          decoration: InputDecoration(
+                              hintText: "Title",
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(5)))),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        TextField(
+                          controller: textDescription,
+                          decoration: InputDecoration(
+                              hintText: "Description",
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(5)))),
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                                onPressed: () {
+                                  setShowForm(false);
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(Colors.red),
+                                  shape:
+                                  MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5.0),
+                                        // side: BorderSide(color: Colors.red)
+                                      )),
+                                  fixedSize:
+                                  MaterialStateProperty.all(Size.fromHeight(50)),
+                                ),
+                                child: Text(
+                                  "Cancel",
+                                  style: TextStyle(fontSize: 25),
+                                )),
+                            ElevatedButton(
+                                onPressed: () {
+                                  setShowForm(false);
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(Colors.green),
+                                  shape:
+                                  MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5.0),
+                                        // side: BorderSide(color: Colors.red)
+                                      )),
+                                  fixedSize:
+                                  MaterialStateProperty.all(Size.fromHeight(50)),
+                                ),
+                                child: Text(
+                                  "Update",
+                                  style: TextStyle(fontSize: 25),
+                                ))
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              }
+          );
+        },
+        child: ListTile(
+          title: Text(toDoModel.title),
+          subtitle: Text(toDoModel.description),
+          trailing: IconButton(
+            icon: Icon(Icons.delete , color: Colors.red),
+            onPressed: (){
+              deleteWork(position);
+            },
+          ),
         ),
       ),
     );
