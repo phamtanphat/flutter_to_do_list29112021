@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-
+import 'package:flutter_to_do_list29112021/todo_model.dart';
 
 class ToDoListPage extends StatefulWidget {
   @override
@@ -8,12 +7,19 @@ class ToDoListPage extends StatefulWidget {
 }
 
 class _ToDoListPageState extends State<ToDoListPage> {
+  late bool isShowForm;
+  late List<ToDoModel> listToDoModels;
 
-  bool isShowForm = false;
+  @override
+  void initState() {
+    isShowForm = false;
+    listToDoModels = [ToDoModel(title: "Title 1", description: "Do sthing title 1")];
+    super.initState();
+  }
 
   void setShowForm(bool isShowForm) {
     setState(() {
-      isShowForm = isShowForm;
+      this.isShowForm = isShowForm;
     });
   }
 
@@ -25,14 +31,26 @@ class _ToDoListPageState extends State<ToDoListPage> {
       ),
       body: Container(
         padding: EdgeInsets.all(8.0),
-        child: shouldShowForm(isShowForm,setShowForm),
+        child: Column(
+          children: [
+            shouldShowForm(isShowForm, setShowForm),
+            Expanded(
+              child: ListView.builder(
+                itemCount: listToDoModels.length,
+                itemBuilder: (context , position){
+                  return itemTodo(listToDoModels[position]);
+                },
+              ),
+            )
+          ],
+        ),
         // child: showTest(),
       ),
     );
   }
 
   Widget shouldShowForm(bool isShowForm, Function setShowForm) {
-    if (isShowForm){
+    if (isShowForm) {
       return Container(
         padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
@@ -66,17 +84,18 @@ class _ToDoListPageState extends State<ToDoListPage> {
                 Expanded(
                   flex: 50,
                   child: ElevatedButton(
-                      onPressed: () {
-
-                      },
+                      onPressed: () {},
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.green),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              // side: BorderSide(color: Colors.red)
-                            )),
-                        fixedSize: MaterialStateProperty.all(Size.fromHeight(50)),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.green),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          // side: BorderSide(color: Colors.red)
+                        )),
+                        fixedSize:
+                            MaterialStateProperty.all(Size.fromHeight(50)),
                       ),
                       child: Text(
                         "Add work",
@@ -92,12 +111,14 @@ class _ToDoListPageState extends State<ToDoListPage> {
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(Colors.red),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              // side: BorderSide(color: Colors.red)
-                            )),
-                        fixedSize: MaterialStateProperty.all(Size.fromHeight(50)),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          // side: BorderSide(color: Colors.red)
+                        )),
+                        fixedSize:
+                            MaterialStateProperty.all(Size.fromHeight(50)),
                       ),
                       child: Text(
                         "Cancel",
@@ -124,38 +145,28 @@ class _ToDoListPageState extends State<ToDoListPage> {
               backgroundColor: MaterialStateProperty.all(Colors.green),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    // side: BorderSide(color: Colors.red)
-                  ))),
+                borderRadius: BorderRadius.circular(10.0),
+                // side: BorderSide(color: Colors.red)
+              ))),
           child: Text(
             "+",
-            style: TextStyle(fontSize: 40,),
+            style: TextStyle(
+              fontSize: 40,
+            ),
           )),
     );
   }
 
-  Widget showTest(){
+  Widget itemTodo(ToDoModel toDoModel) {
     return Container(
-      width: MediaQuery.of(context).size.width,
-      color: Colors.grey[500],
-      padding: EdgeInsets.all(10),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text("View"),
-          Flexible(
-            child: TextField(
-              decoration: InputDecoration(
-                  hintText: "Title",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(5)))),
-            ),
-          ),
-          SizedBox(height: 30),
-        ],
+      child: ListTile(
+        title: Text(toDoModel.title),
+        subtitle: Text(toDoModel.description),
+        trailing: IconButton(
+          icon: Icon(Icons.delete , color: Colors.red),
+          onPressed: () {},
+        ),
       ),
     );
   }
-
 }
-
