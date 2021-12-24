@@ -197,7 +197,7 @@ class _ToDoListPageState extends State<ToDoListPage> {
                         TextField(
                           controller: textTitle,
                           decoration: InputDecoration(
-                              hintText: "Title 1",
+                              hintText: "Title 123",
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.all(Radius.circular(5)))),
                         ),
@@ -207,7 +207,7 @@ class _ToDoListPageState extends State<ToDoListPage> {
                         TextField(
                           controller: textDescription,
                           decoration: InputDecoration(
-                              hintText: "Description 1",
+                              hintText: "Description 123",
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.all(Radius.circular(5)))),
                         ),
