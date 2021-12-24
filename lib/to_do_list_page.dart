@@ -23,15 +23,21 @@ class _ToDoListPageState extends State<ToDoListPage> {
     });
   }
 
-  void addWork(ToDoModel toDoModel){
+  void addWork(ToDoModel toDoModel) {
     setState(() {
       listToDoModels.add(toDoModel);
     });
   }
 
-  void deleteWork(int position){
+  void deleteWork(int position) {
     setState(() {
       listToDoModels.removeAt(position);
+    });
+  }
+
+  void updateWork(int position, ToDoModel toDoModel) {
+    setState(() {
+      listToDoModels[position] = toDoModel;
     });
   }
 
@@ -45,12 +51,13 @@ class _ToDoListPageState extends State<ToDoListPage> {
         padding: EdgeInsets.all(8.0),
         child: Column(
           children: [
-            shouldShowForm(isShowForm, setShowForm , addWork),
+            shouldShowForm(isShowForm, setShowForm, addWork),
             Expanded(
               child: ListView.builder(
                 itemCount: listToDoModels.length,
-                itemBuilder: (context , position){
-                  return itemTodo(listToDoModels[position] , position ,deleteWork);
+                itemBuilder: (context, position) {
+                  return itemTodo(
+                      listToDoModels[position], position, deleteWork);
                 },
               ),
             )
@@ -61,7 +68,8 @@ class _ToDoListPageState extends State<ToDoListPage> {
     );
   }
 
-  Widget shouldShowForm(bool isShowForm, Function setShowForm, Function addWork) {
+  Widget shouldShowForm(bool isShowForm, Function setShowForm,
+      Function addWork) {
     final TextEditingController textTitle = TextEditingController();
     final TextEditingController textDescription = TextEditingController();
     if (isShowForm) {
@@ -104,23 +112,26 @@ class _ToDoListPageState extends State<ToDoListPage> {
                         String title = textTitle.text.toString();
                         String description = textDescription.text.toString();
 
-                        if(title.isEmpty || description.isEmpty){
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Ban chua truyen du thong tin")));
+                        if (title.isEmpty || description.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(
+                                  "Ban chua truyen du thong tin")));
                           return;
                         }
-                        addWork(ToDoModel(title: title , description: description));
+                        addWork(
+                            ToDoModel(title: title, description: description));
                       },
                       style: ButtonStyle(
                         backgroundColor:
-                            MaterialStateProperty.all(Colors.green),
+                        MaterialStateProperty.all(Colors.green),
                         shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          // side: BorderSide(color: Colors.red)
-                        )),
+                        MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                              // side: BorderSide(color: Colors.red)
+                            )),
                         fixedSize:
-                            MaterialStateProperty.all(Size.fromHeight(50)),
+                        MaterialStateProperty.all(Size.fromHeight(50)),
                       ),
                       child: Text(
                         "Add work",
@@ -132,18 +143,18 @@ class _ToDoListPageState extends State<ToDoListPage> {
                   flex: 45,
                   child: ElevatedButton(
                       onPressed: () {
-                        setShowForm(false);
+                        setShowForm(!isShowForm);
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(Colors.red),
                         shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          // side: BorderSide(color: Colors.red)
-                        )),
+                        MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                              // side: BorderSide(color: Colors.red)
+                            )),
                         fixedSize:
-                            MaterialStateProperty.all(Size.fromHeight(50)),
+                        MaterialStateProperty.all(Size.fromHeight(50)),
                       ),
                       child: Text(
                         "Cancel",
@@ -161,15 +172,15 @@ class _ToDoListPageState extends State<ToDoListPage> {
       height: 50,
       child: ElevatedButton(
           onPressed: () {
-            setShowForm(true);
+            setShowForm(!isShowForm);
           },
           style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Colors.green),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                // side: BorderSide(color: Colors.red)
-              ))),
+                    borderRadius: BorderRadius.circular(10.0),
+                    // side: BorderSide(color: Colors.red)
+                  ))),
           child: Text(
             "+",
             style: TextStyle(
@@ -179,15 +190,17 @@ class _ToDoListPageState extends State<ToDoListPage> {
     );
   }
 
-  Widget itemTodo(ToDoModel toDoModel , int position , Function deleteWork) {
+  Widget itemTodo(ToDoModel toDoModel, int position, Function deleteWork) {
     return Container(
       child: InkWell(
-        onTap: (){
+        onTap: () {
           showDialog(
               context: context,
-              builder: (context){
+              builder: (context) {
                 final TextEditingController textTitle = TextEditingController();
+                textTitle.text = toDoModel.title;
                 final TextEditingController textDescription = TextEditingController();
+                textDescription.text = toDoModel.description;
                 return Dialog(
                   child: Container(
                     padding: EdgeInsets.all(5),
@@ -197,9 +210,9 @@ class _ToDoListPageState extends State<ToDoListPage> {
                         TextField(
                           controller: textTitle,
                           decoration: InputDecoration(
-                              hintText: "Title",
                               border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(5)))),
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(5)))),
                         ),
                         SizedBox(
                           height: 10,
@@ -209,7 +222,8 @@ class _ToDoListPageState extends State<ToDoListPage> {
                           decoration: InputDecoration(
                               hintText: "Description",
                               border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(5)))),
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(5)))),
                         ),
                         SizedBox(height: 10),
                         Row(
@@ -217,18 +231,23 @@ class _ToDoListPageState extends State<ToDoListPage> {
                           children: [
                             ElevatedButton(
                                 onPressed: () {
-                                  setShowForm(false);
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop();
                                 },
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Colors.red),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Colors.red),
                                   shape:
-                                  MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5.0),
+                                        borderRadius: BorderRadius.circular(
+                                            5.0),
                                         // side: BorderSide(color: Colors.red)
                                       )),
                                   fixedSize:
-                                  MaterialStateProperty.all(Size.fromHeight(50)),
+                                  MaterialStateProperty.all(
+                                      Size.fromHeight(50)),
                                 ),
                                 child: Text(
                                   "Cancel",
@@ -236,18 +255,33 @@ class _ToDoListPageState extends State<ToDoListPage> {
                                 )),
                             ElevatedButton(
                                 onPressed: () {
-                                  setShowForm(false);
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop();
+                                  if (textTitle.text.isEmpty ||
+                                      textDescription.text.isEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text(
+                                            "Ban chua truyen du thong tin")));
+                                    return;
+                                  }
+                                  updateWork(position, ToDoModel(
+                                      title: textTitle.text,
+                                      description: textDescription.text));
                                 },
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Colors.green),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Colors.green),
                                   shape:
-                                  MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5.0),
+                                        borderRadius: BorderRadius.circular(
+                                            5.0),
                                         // side: BorderSide(color: Colors.red)
                                       )),
                                   fixedSize:
-                                  MaterialStateProperty.all(Size.fromHeight(50)),
+                                  MaterialStateProperty.all(
+                                      Size.fromHeight(50)),
                                 ),
                                 child: Text(
                                   "Update",
@@ -266,8 +300,8 @@ class _ToDoListPageState extends State<ToDoListPage> {
           title: Text(toDoModel.title),
           subtitle: Text(toDoModel.description),
           trailing: IconButton(
-            icon: Icon(Icons.delete , color: Colors.red),
-            onPressed: (){
+            icon: Icon(Icons.delete, color: Colors.red),
+            onPressed: () {
               deleteWork(position);
             },
           ),
@@ -275,4 +309,3 @@ class _ToDoListPageState extends State<ToDoListPage> {
       ),
     );
   }
-}
