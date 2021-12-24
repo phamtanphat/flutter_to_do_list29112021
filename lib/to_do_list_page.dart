@@ -37,7 +37,7 @@ class _ToDoListPageState extends State<ToDoListPage> {
 
   void updateWork(int position, ToDoModel toDoModel){
     setState(() {
-      listToDoModels.replaceRange(position,position+1,[toDoModel]);
+      listToDoModels[position] = toDoModel;
     });
   }
 
@@ -138,7 +138,7 @@ class _ToDoListPageState extends State<ToDoListPage> {
                   flex: 45,
                   child: ElevatedButton(
                       onPressed: () {
-                        setShowForm(false);
+                        setShowForm(!isShowForm);
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(Colors.red),
@@ -167,7 +167,7 @@ class _ToDoListPageState extends State<ToDoListPage> {
       height: 50,
       child: ElevatedButton(
           onPressed: () {
-            setShowForm(true);
+            setShowForm(!isShowForm);
           },
           style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Colors.green),
@@ -225,7 +225,6 @@ class _ToDoListPageState extends State<ToDoListPage> {
                             ElevatedButton(
                                 onPressed: () {
                                   Navigator.of(context, rootNavigator: true).pop();
-                                  // setShowForm(false);
                                 },
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(Colors.red),
